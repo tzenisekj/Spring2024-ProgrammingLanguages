@@ -42,6 +42,10 @@ if __name__ == '__main__':
                     else:
                         underQuotes = True
                     holder += i
+                elif i == ";":
+                    lexicalList.append(holder)
+                    holder = ""
+                    lexicalList.append(i)
                 elif i in symbolList:
                     if not underQuotes:
                         if holder.find("\\"):

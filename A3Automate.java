@@ -61,7 +61,6 @@ public class A3Automate {
         // loops through string testing all inputs
         for (int i = 0; i < input_string.length(); i++) {
             // gets next state based on current state
-            System.out.print(input_string.charAt(i));
             currState = A3_map(currState, input_string.charAt(i));
 
             // check for break in process
@@ -81,17 +80,12 @@ public class A3Automate {
 
     public static void main(String[] args) {  
         // initialized variables
-        String inputString;
-        Scanner inputScanner = new Scanner(System.in);
-
-        // gets user input
-        System.out.println("Enter string to test.\n~ ");
-        inputString = inputScanner.nextLine();
-
-        // test string
-        System.out.println("\n" + inputString + " returned " + A3_number(inputString)); 
-
-        // close scanners
-        inputScanner.close();
+        String[] testStrings = {"01", "11010", "010101", "110101", "00", "000110100"};
+        
+        System.out.println("Testing Automan A3...\n------------------");
+        for (int i = 0; i < testStrings.length; i++) {
+            System.out.println("Testing: " + testStrings[i]); 
+            System.out.println("Result: " + A3_number(testStrings[i]));
+        }
     }
 }
