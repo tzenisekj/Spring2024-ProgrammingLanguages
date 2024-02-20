@@ -1,10 +1,50 @@
+import java.util.ArrayList;
 public class FSLexicalAnalyzer {
     private String FS_String = ""; 
-    private String[] Lexicons; 
+    private ArrayList<String> lexicons = new ArrayList<String>(); 
 
-    public void setFS_String(String s) { FS_String = s; }
+    public void setFS_String(String s) { 
+        FS_String = s;
+        setLexicons();
+    }
 
     public String getFS_String() { return FS_String; }
+
+    public ArrayList<String> getLexicons() throws Exception { 
+        if (FS_String == "") {
+            throw new Exception("No string set to scan or test! Pass string to scanner first."); 
+        }
+
+        return lexicons;
+    }
+
+    private void setLexicons() {
+        String currState = "S";
+        String finalState = "OUT"; 
+        String temp = "";
+        for (int i = 0; i < FS_String.length(); i++) {
+            if (FS_String.charAt(i) == ' ') { continue; } // ignore spaces
+            currState = lexiconMap(currState, FS_String.charAt(i));
+            if (currState == "ID") {
+                temp += FS_String.charAt(i);
+            }
+            else if (currState == "ERR") {
+                break;
+            }
+            else if (currState == "OUT") {
+                if (temp != "") {
+                    lexicons.add(temp);
+                    temp = "";
+                    lexicons.add(String.valueOf(FS_String.charAt(i)));
+                    currState = "S";
+                }
+                else {
+                    lexicons.add(String.valueOf(FS_String.charAt(i)));
+                    currState = "S";
+                }
+            }
+        }
+    }
 
     public Boolean testFS_String() throws Exception {
         if (FS_String == "") {
@@ -16,6 +56,7 @@ public class FSLexicalAnalyzer {
 
         for (int i = 0; i < FS_String.length(); i++) {
             if (FS_String.charAt(i) == ' ') { continue; } // ignore spaces
+            if (currState == "OUT") { currState = "S"; }
             currState = lexiconMap(currState, FS_String.charAt(i)); 
             if (currState == "ERR") { break; }
         }
@@ -24,10 +65,6 @@ public class FSLexicalAnalyzer {
         else {
             return false; 
         }
-    }
-
-    public void scanFS_String() {
-
     }
 
     private String lexiconMap(String state, char symbol) {
@@ -84,12 +121,11 @@ public class FSLexicalAnalyzer {
         System.out.println("Scanning: \"" + testInput + "\""); 
         try {
             System.out.println("Is valid: " + scanner.testFS_String());
+            System.out.println("Symbols: " + scanner.getLexicons());
         } 
         catch (Exception e) {
             System.out.println(e.getMessage()); 
             System.exit(0);
         }
-
-
     }
 }
